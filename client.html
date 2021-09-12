@@ -54,7 +54,7 @@
         const ip = document.getElementById("ip").value.trim();
         if(ip === "") {alert("Insert a server ip first!");return;}
         if(ws !== null) {alert("You are already connected!");return;}
-        ws = new WebSocket("ws://"+ip+":8080")
+        ws = new WebSocket("ws://"+ip+":8082")
 
         ws.addEventListener("open", () => {
             console.log("Connected.");
@@ -101,7 +101,7 @@
 
 
     function getPwd() {
-        var password = encrypt(document.getElementById("pwd").value)
+        var password = document.getElementById("pwd").value
         if(password===null||password==="") return false;
         return password;
     }
