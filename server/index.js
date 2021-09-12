@@ -25,9 +25,9 @@ httpsServer.listen(6502, function() {
     console.log((new Date()) + " Server is listening on port 6502");
 });
 
-const wss = new WebSocket.server({port: port, httpServer: httpsServer});
+const wss = new WebSocket.Server({port: port, httpServer: httpsServer});
 */
-const wss = new WebSocket.server({port: port});
+const wss = new WebSocket.Server({port: port});
 
 function broadcast(text, author) {
     clients.forEach((_value, client) => {
