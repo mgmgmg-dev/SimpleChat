@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const port = 8081;
+const port = 8082;
 const wss = new WebSocket.Server({port: port});
 var clients = new Map()
 
@@ -226,13 +226,13 @@ wss.on("connection", (ws, req) => {
 
     ws.on("message", data => {
         if(data.toString().startsWith("EPWD:")){
-            var epwd=encrypt(pwds.indexOf(data.toString().replace("EPWD:","")));
+            var epwd=encrypt(data.toString().replace("EPWD:",""));
             if(epwd===false) {ws.send("ERROR:WRONGCHAR");return;}
             console.log(epwd)
             if(pwds.indexOf(epwd)===-1){ws.send("ERROR:WRONGPWD");return;}
             pwds.split(/\r?\n/).forEach((line, idx)=> {
-                if(line.includes(data.toString().replace("EPWD:",""))){
-                name=line.replace(data.toString().replace("EPWD:","")+":","");
+                if(line.includes(epwd)){
+                name=line.replace(epwd+":","");
                 }
             });
             var uuid = Math.floor(Math.random() * 1000000000000000000000000000);
