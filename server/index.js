@@ -1,7 +1,7 @@
 //Created by mgmgmg
 //Uncomment the code if you want to run the code as wss intead of ws
 
-const WebSocketServer = require('ws').server;
+const WebSocket = require('ws');
 //const https = require('https');
 const port = 8082;
 var clients = new Map()
@@ -25,9 +25,9 @@ httpsServer.listen(6502, function() {
     console.log((new Date()) + " Server is listening on port 6502");
 });
 
-const wss = new WebSocketServer({port: port, httpServer: httpsServer});
+const wss = new WebSocket.server({port: port, httpServer: httpsServer});
 */
-const wss = new WebSocketServer({port: port});
+const wss = new WebSocket.server({port: port});
 
 function broadcast(text, author) {
     clients.forEach((_value, client) => {
