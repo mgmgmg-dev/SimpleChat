@@ -1,10 +1,33 @@
-const WebSocket = require("ws");
+//Created by mgmgmg
+//Uncomment the code if you want to run the code as wss intead of ws
+
+const WebSocketServer = require('websocket').server;
+//const https = require('https');
 const port = 8082;
-const wss = new WebSocket.Server({port: port});
 var clients = new Map()
 
 const fs = require('fs')
 var pwds = fs.readFileSync('accounts.txt', 'utf8')
+
+/*
+var httpsOptions = {
+    key: fs.readFileSync("INSERT HTTPS KEY"),
+    cert: fs.readFileSync("INSERT WSS CERTIFICATE")
+};
+
+var httpsServer = https.createServer(httpsOptions, function(request, response) {
+    console.log(" Received request for " + request.url);
+    response.writeHead(404);
+    response.end();
+});
+
+httpsServer.listen(6502, function() {
+    console.log((new Date()) + " Server is listening on port 6502");
+});
+
+const wss = new WebSocketServer({port: port, httpServer: httpsServer});
+*/
+const wss = new WebSocketServer({port: port});
 
 function broadcast(text, author) {
     clients.forEach((_value, client) => {
