@@ -229,6 +229,7 @@ wss.on("connection", (ws, req) => {
             var epwd=encrypt(data.toString().replace("EPWD:",""));
             if(epwd===false) {ws.send("ERROR:WRONGCHAR");return;}
             epwd = epwd.toString();
+            console.log(epwd)
             if(pwds.indexOf(epwd)===-1){ws.send("ERROR:WRONGPWD");return;}
             pwds.split(/\r?\n/).forEach((line, idx)=> {
                 if(line.includes(epwd)){
