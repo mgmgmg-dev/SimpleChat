@@ -50,6 +50,7 @@
 <script>
     var ws = null;
     var uuid = ""
+    var lastPassword = "";
     function connect() {
         const ip = document.getElementById("ip").value.trim();
         if(ip === "") {alert("Insert a server ip first!");return;}
@@ -61,6 +62,8 @@
             addMessage("Connected", null);
             var pwd = getPwd();
             if(pwd===false) return;
+            document.getElementById("ip").value="";
+            document.getElementById("pwd").value="";
             ws.send("EPWD:"+pwd);
         })
 
@@ -88,6 +91,7 @@
         text = document.getElementById("text").value.trim();
         if(text.length<1) {alert("Type something first!");return;}
         ws.send(uuid+":"+text);
+        document.getElementById("text").value="";
     }
 
     function addMessage(text, author) {
@@ -98,11 +102,10 @@
         document.getElementById('messages').innerHTML = ('<li><b>'+author+'</b></li>')+document.getElementById('messages').innerHTML;
     }
 
-
-
     function getPwd() {
         var password = document.getElementById("pwd").value
         if(password===null||password==="") return false;
+        lastPassword=password;
         return password;
     }
 </script>
