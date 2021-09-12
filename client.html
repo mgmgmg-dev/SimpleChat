@@ -1,0 +1,108 @@
+<title>SimpleChat</title>
+<style>
+    button.sendButton {
+        background-color: rgb(0, 212, 0);
+        text-align: center;
+        padding: 10px;
+    }
+    button.sendButton:hover {
+        background-color: rgb(0, 139, 0);
+    }
+    button.connectButton {
+        background-color: yellow;
+        text-align: center;
+        padding: 10px;
+    }
+    button.connectButton:hover {
+        background-color: orange;
+    }
+    button.disconnectButton {
+        background-color: rgb(255, 94, 94);
+        text-align: center;
+        padding: 10px;
+    }
+    button.disconnectButton:hover {
+        background-color: rgb(202, 0, 0);
+    }
+    input.textInput {
+        height: 25px;
+        width: 100%;
+    }
+    li {
+        color: white;
+    }
+</style>
+<body style="background-color: rgb(28, 28, 28);">
+<div>
+    <input type="password" id="pwd" maxlength="27" placeholder="User Password">
+</div>
+<div>
+    <input type="text" id="ip" maxlength="27" placeholder="Server ip">
+    <button class="connectButton" onclick="connect()">Connect</button>
+    <button class="disconnectButton" onclick="disconnect()">Disconnect</button>
+</div>
+<div style="padding-top: 30px;"><input type="text" id="text" class="textinput" maxlength="128"></div>
+<div>
+    <button class="sendButton" onclick="send()">Send</button>
+</div>
+<ul id="messages" style="list-style-type: none;"></ul>
+</body>
+<script>
+    var ws = null;
+    var uuid = ""
+    function connect() {
+        const ip = document.getElementById("ip").value.trim();
+        if(ip === "") {alert("Insert a server ip first!");return;}
+        if(ws !== null) {alert("You are already connected!");return;}
+        ws = new WebSocket("ws://"+ip+":8080")
+
+        ws.addEventListener("open", () => {
+            console.log("Connected.");
+            addMessage("Connected", null);
+            var pwd = getPwd();
+            if(pwd===false) return;
+            ws.send("EPWD:"+pwd);
+        })
+
+        ws.addEventListener("message", message => {
+            if(message.data === "MESSAGE_SENT"){console.log("Message sent succesfully.");}
+            else if(message.data.startsWith("MESSAGE:")) {
+                var array = message.data.split(":")
+                console.log(`Message receved by ${array[1]} (${array[2]}): ${array[3]}`)
+                addMessage(array[3], `${array[1]} (${array[2]})`)
+            }
+            else if(message.data.startsWith("UUID:")){uuid=message.data.replace("UUID:","")}
+            else {console.log(message.data); alert(message.data)}
+        })
+    }
+
+    function disconnect() {
+        if(ws === null) {alert("You are already disconnected!");return;}
+        ws.close();
+        ws=null;
+        addMessage("Disconnected", null)
+    }
+
+    function send() {
+        if(ws === null) {alert("Connect to a server first!");return;}
+        text = document.getElementById("text").value.trim();
+        if(text.length<1) {alert("Type something first!");return;}
+        ws.send(uuid+":"+text);
+    }
+
+    function addMessage(text, author) {
+        document.getElementById('messages').innerHTML = ('<br>')+document.getElementById('messages').innerHTML;
+        document.getElementById('messages').innerHTML = ('<li>'+text.replace("<","&lt;")
+            .replace(">","&gt;")+'</li>')+document.getElementById('messages').innerHTML;
+        if(author === null) {return;}
+        document.getElementById('messages').innerHTML = ('<li><b>'+author+'</b></li>')+document.getElementById('messages').innerHTML;
+    }
+
+
+
+    function getPwd() {
+        var password = encrypt(document.getElementById("pwd").value)
+        if(password===null||password==="") return false;
+        return password;
+    }
+</script>

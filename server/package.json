@@ -1,0 +1,15 @@
+{
+  "name": "SimpleChat",
+  "version": "0.1.1",
+  "description": "SimpleChat server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "mgmgmg",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.2.2"
+  }
+}
