@@ -1,7 +1,7 @@
 //Created by mgmgmg
 //Uncomment the code if you want to run the code as wss intead of ws
 
-const WebSocketServer = require('websocket').server;
+const WebSocketServer = require('ws').server;
 //const https = require('https');
 const port = 8082;
 var clients = new Map()
